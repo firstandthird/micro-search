@@ -47,3 +47,7 @@ Payload:
   - index (optional, name of index, defaults to `ENV.ELASTICSEARCH_INDEX`)
   - type (optional, item type, defaults to `ENV.ELASTICSEARCH_TYPE`)
   - id (required, unique id/slug for item)
+
+#### POST `/pagedata/hook`
+
+Use as the hook in Pagedata.

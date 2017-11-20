@@ -12,6 +12,7 @@ exports.pagedataHook = {
 
         // Allow setting of draft to also pull publish, but not the other way around
         if (settings.search.status === 'published' && request.payload.status !== settings.search.status) {
+          server.log(['pagedata', 'skipped', 'info'], { slug: request.payload.slug, status: request.payload.status });
           return done(null, false);
         }
 
@@ -39,15 +40,17 @@ exports.pagedataHook = {
 
         // Allows entire pagedata object
         if (settings.search.indexAll && settings.search.indexAllKey) {
-          data.body[settings.search.indexAllKey] = server.methods.flatten();
+          data.body[settings.search.indexAllKey] = server.methods.flatten(content);
         }
 
         server.methods.req.post(`/add?token=${request.query.token}`, data, done);
       },
-      reply(index, done) {
+      reply(server, request, index, done) {
         if (!index) {
           return done();
         }
+
+        server.log(['pagedata', 'success', 'info'], { slug: request.payload.slug });
 
         done(null, index);
       }
