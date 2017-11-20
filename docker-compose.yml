@@ -1,0 +1,32 @@
+version: '2.2'
+
+services:
+  proxy:
+    image: traefik
+    command: --web --docker --logLevel=INFO
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+
+  search:
+    image: 'firstandthird/node:8.8-dev'
+    ports:
+      - 8080
+    labels:
+      - "traefik.frontend.rule=PathPrefix:/"
+    volumes:
+      - '.:/home/app/src'
+    environment:
+      API_KEY:
+      ELASTICSEARCH_HOST:
+      ELASTICSEARCH_INDEX:
+      ELASTICSEARCH_TYPE:
+      PAGEDATA_HOST: 'https://cdn.pagedata.co'
+      PAGEDATA_KEY:
+      PAGEDATA_SEARCH_OBJECT:
+      PAGEDATA_STATUS: 'draft'
+      INDEX_ALL: 'true'
+      INDEX_ALL_KEY: 'allContent'
