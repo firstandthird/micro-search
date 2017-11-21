@@ -2,11 +2,11 @@ const Boom = require('boom');
 
 exports.pagedataHook = {
   method: 'POST',
-  path: 'hook',
+  path: '/pagedata/hook',
   handler: {
     autoInject: {
       content(server, request, settings, done) {
-        if (!request.payload.slug) {
+        if (!request.payload || !request.payload.slug) {
           return done(Boom.badData('slug required'));
         }
 
@@ -24,7 +24,7 @@ exports.pagedataHook = {
         }
 
         let searchObject = content;
-        if (typeof content[settings.search.searchObject] !== 'object') {
+        if (typeof content[settings.search.searchObject] === 'object') {
           searchObject = content[settings.search.searchObject];
           delete content[settings.search.searchObject];
         } else {
@@ -43,7 +43,7 @@ exports.pagedataHook = {
           data.body[settings.search.indexAllKey] = server.methods.flatten(content);
         }
 
-        server.methods.req.post(`/add?token=${request.query.token}`, data, done);
+        server.req.post(`/add?token=${request.query.token}`, { payload: data }, done);
       },
       reply(server, request, index, done) {
         if (!index) {

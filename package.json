@@ -25,6 +25,7 @@
     }
   },
   "dependencies": {
+    "async": "^2.6.0",
     "boom": "^7.1.1",
     "elasticsearch": "^14.0.0",
     "hapi-api-key": "^2.0.0",
