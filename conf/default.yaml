@@ -26,7 +26,6 @@ plugins:
     host: '{{ENV.PAGEDATA_HOST}}'
     key: '{{ENV.PAGEDATA_KEY}}'
     status: '{{search.status}}'
-    hookEndpoint: '/pagedata/hook'
   hapi-req:
   './plugins/search':
     mainIndex: '{{search.mainIndex}}'

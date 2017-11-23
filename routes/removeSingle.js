@@ -3,7 +3,7 @@ const Boom = require('boom');
 
 exports.removeSingle = {
   method: 'DELETE',
-  path: '/remove/Single',
+  path: '/remove/single',
   config: {
     validate: {
       payload: {
