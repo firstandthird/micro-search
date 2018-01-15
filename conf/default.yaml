@@ -1,0 +1,34 @@
+search:
+  host: '{{ENV.ELASTICSEARCH_HOST}}'
+  mainIndex: '{{ENV.ELASTICSEARCH_INDEX}}'
+  elasticLog: 'error'
+  defaultType: '{{ENV.ELASTICSEARCH_TYPE}}'
+  searchObject: '{{ENV.PAGEDATA_SEARCH_OBJECT}}'
+  status: '{{ENV.PAGEDATA_STATUS}}'
+  indexAll: '{{ENV.INDEX_ALL}}'
+  indexAllKey: '{{ENV.INDEX_ALL_KEY}}'
+
+plugins:
+  hapi-api-key:
+    _priority: -1
+    strategy:
+      name: 'apikey'
+      mode: true
+      apiKeys:
+        '{{ENV.API_KEY}}':
+          name: 'microsearch'
+  hapi-method-loader:
+    _priority: -2
+  hapi-auto-handler:
+    _priority: -1
+  hapi-pagedata:
+    verbose: true
+    host: '{{ENV.PAGEDATA_HOST}}'
+    key: '{{ENV.PAGEDATA_KEY}}'
+    status: '{{search.status}}'
+  hapi-req:
+  './plugins/search':
+    mainIndex: '{{search.mainIndex}}'
+    log: true
+    host: '{{search.host}}'
+    elasticLog: '{{search.elasticLog}}'

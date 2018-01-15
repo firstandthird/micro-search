@@ -1,0 +1,16 @@
+#!/bin/bash
+
+CMD=$1
+
+if [[ -z "$CMD" ]]; then
+  docker-compose build &&
+  docker-compose up
+  exit
+fi
+
+if [[ "$CMD" == "build" ]]; then
+  docker-compose build
+  exit
+fi
+
+docker-compose $@
