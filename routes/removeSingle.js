@@ -20,10 +20,10 @@ exports.removeSingle = {
           return done(Boom.serverUnavailable('No connection to elasticsearch.'));
         }
 
-        const data = Object.assign({}, request.payload, {
+        const data = Object.assign({}, {
           index: settings.search.mainIndex,
           type: settings.search.defaultType
-        });
+        }, request.payload);
 
         server.log(['remove', 'pending', 'info'], data);
 

@@ -19,9 +19,9 @@ exports.query = {
           return done(Boom.serverUnavailable('No connection to elasticsearch.'));
         }
 
-        const data = Object.assign({}, request.payload, {
+        const data = Object.assign({}, {
           index: settings.search.mainIndex
-        });
+        }, request.payload);
 
         server.log(['query', 'pending', 'info'], data);
 
