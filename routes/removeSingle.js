@@ -27,7 +27,7 @@ exports.removeSingle = {
 
         server.log(['remove', 'pending', 'info'], data);
 
-        server.search.removeFromIndex(data, (err, res, status) => {
+        server.search.delete(data, (err, res, status) => {
           done(err, { res, status, data });
         });
       },

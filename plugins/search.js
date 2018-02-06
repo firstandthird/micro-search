@@ -6,7 +6,7 @@ exports.register = function(server, options, next) {
     client = new elasticsearch.Client({
       host: options.host,
       log: options.elasticLog,
-      apiVersion: '5.0'
+      apiVersion: '6.0'
     });
   }
 
