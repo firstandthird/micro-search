@@ -22,6 +22,7 @@ exports.removeByType = {
         const data = Object.assign({}, {
           index: settings.search.mainIndex,
           type: settings.search.defaultType,
+          conflicts: 'proceed',
           body: {
             query: {
               match_all: {}
