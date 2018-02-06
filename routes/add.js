@@ -31,7 +31,7 @@ exports.add = {
         server.search.index(data, done);
       },
       reply(server, index, done) {
-        if (Array.isArray(index) && typeof index[0] === 'object' && index[1] === 200) {
+        if (Array.isArray(index) && typeof index[0] === 'object' && index[1] === 201) {
           server.log(['add', 'success', 'info'], { id: index[0]._id });
         } else {
           server.log(['add', 'failed', 'error'], index);
