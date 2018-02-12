@@ -20,7 +20,8 @@ exports.query = {
         }
 
         const data = Object.assign({}, {
-          index: settings.search.mainIndex
+          index: settings.search.mainIndex,
+          ignoreUnavailable: true
         }, request.payload);
 
         server.log(['query', 'pending', 'info'], data);
