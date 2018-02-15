@@ -39,9 +39,9 @@ exports.query = {
         }
 
         // Makes sure hits.hits exists
-        const res = Object.assign({}, { hits: { hits: [] } }, query.res);
+        const res = Object.assign({}, { hits: { total: 0, hits: [] } }, query.res);
 
-        done(null, res.hits.hits);
+        done(null, res.hits);
       }
     }
   }
