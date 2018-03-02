@@ -23,7 +23,8 @@ exports.add = {
 
         const data = Object.assign({}, {
           index: settings.search.mainIndex,
-          type: settings.search.defaultType
+          type: settings.search.defaultType,
+          refresh: true
         }, request.payload);
 
         server.log(['add', 'pending', 'info'], data);

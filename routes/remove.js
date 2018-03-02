@@ -23,6 +23,7 @@ exports.removeByType = {
           index: settings.search.mainIndex,
           type: settings.search.defaultType,
           conflicts: 'proceed',
+          refresh: true,
           body: {
             query: {
               match_all: {}
