@@ -11,6 +11,11 @@ exports.register = function(server, options, next) {
   }
 
   server.decorate('server', 'search', client);
+
+  if (typeof server.methods.postInit === 'function') {
+    server.methods.postInit(client);
+  }
+
   next();
 };
 
