@@ -19,6 +19,9 @@ services:
       - "traefik.frontend.rule=PathPrefix:/"
     volumes:
       - '.:/home/app/src'
+    links:
+      - 'elasticsearch:elasticsearch'
+      - 'proxy:proxy'
     environment:
       API_KEY:
       ELASTICSEARCH_HOST:
@@ -30,3 +33,16 @@ services:
       PAGEDATA_STATUS: 'draft'
       INDEX_ALL: 'true'
       INDEX_ALL_KEY: 'allContent'
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.0.1
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200

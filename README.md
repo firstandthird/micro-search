@@ -31,6 +31,15 @@ Payload:
   - index (optional, name of index, defaults to `ENV.ELASTICSEARCH_INDEX`)
   - body (required, elasticsearch query. Tip: use the bodybuilder module to construct queries.)
 
+#### GET `/complete`
+
+Query:
+
+  - token (access token)
+  - index (optional, name of index, defaults to `ENV.ELASTICSEARCH_INDEX`)
+  - field (required, name of suggestor field. See note below regarding indexes)
+  - q (required, text to use for completion)
+
 #### DELETE `/remove`
 
 Note: This removes all items matching the payload.
@@ -51,3 +60,54 @@ Payload:
 #### POST `/pagedata/hook`
 
 Use as the hook in Pagedata.
+
+#### Indexes
+
+In order to use completion you must setup mappings. This only has to be done once. `field_name` should be the name of the field you will use for completion. When indexing items, you'll also need to add a field called `<field_name>_suggest`. In most cases it would just be the field duplicated, such as a `name` field.
+
+Example:
+
+http PUT <url of elasticsearch>:9200/<index>
+
+body:
+```json
+{
+  "mappings": {
+    "<type>": {
+      "properties": {
+        "<field_name>_suggest": {
+          "type": "completion"
+        }
+      }
+    }
+  }
+}
+```
+
+in action:
+```json
+{
+  "mappings": {
+    "book": {
+      "properties": {
+        "name_suggest": {
+          "type": "completion"
+        }
+      }
+    }
+  }
+}
+```
+
+http post /add
+
+```json
+{
+  "type": "book",
+  "id": "book1",
+  "body": {
+    "name": "Amazing Book",
+    "name_suggest": "Amazing Book"
+  }
+}
+```
