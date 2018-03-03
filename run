@@ -13,4 +13,9 @@ if [[ "$CMD" == "build" ]]; then
   exit
 fi
 
+if [[ "$CMD" == "test" ]]; then
+  docker-compose run --rm search sh -c "npm install && npm test"
+  exit
+fi
+
 docker-compose $@
