@@ -6,6 +6,7 @@
     "node": ">=8.8.0"
   },
   "scripts": {
+    "test": "tap tests/test.**.js --cov",
     "start": "rapptor"
   },
   "keywords": [
@@ -16,7 +17,8 @@
   "devDependencies": {
     "eslint": "^4.11.0",
     "eslint-config-firstandthird": "^4.0.1",
-    "eslint-plugin-import": "^2.6.1"
+    "eslint-plugin-import": "^2.6.1",
+    "tap": "^11.1.1"
   },
   "eslintConfig": {
     "extends": "firstandthird",
