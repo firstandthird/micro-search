@@ -12,41 +12,36 @@ exports.removeByType = {
       }
     },
   },
-  handler: {
-    autoInject: {
-      remove(server, settings, request, done) {
-        if (!server.search) {
-          return done(Boom.serverUnavailable('No connection to elasticsearch.'));
-        }
+  async handler(request, h) {
+    const server = request.server;
+    const settings = server.settings.app;
 
-        const data = Object.assign({}, {
-          index: settings.search.mainIndex,
-          type: settings.search.defaultType,
-          conflicts: 'proceed',
-          refresh: true,
-          body: {
-            query: {
-              match_all: {}
-            }
-          }
-        }, request.payload);
-
-        server.log(['remove', 'pending', 'info'], data);
-
-        server.search.deleteByQuery(data, (err, res, status) => {
-          done(err, { res, status, data });
-        });
-      },
-      reply(server, remove, done) {
-        if (remove.status === 200) {
-          server.log(['remove', 'success', 'info'], { type: remove.data.type });
-        } else {
-          server.log(['remove', 'failed', 'error'], remove);
-          return done(Boom.badRequest('Error removing from index', remove));
-        }
-
-        done(null, remove);
-      }
+    if (!server.search) {
+      throw Boom.serverUnavailable('No connection to elasticsearch.');
     }
+
+    const data = Object.assign({}, {
+      index: settings.search.mainIndex,
+      type: settings.search.defaultType,
+      conflicts: 'proceed',
+      refresh: true,
+      body: {
+        query: {
+          match_all: {}
+        }
+      }
+    }, request.payload);
+
+    server.log(['remove', 'pending', 'info'], data);
+
+    const { result, status } = await server.search.deleteByQuery(data);
+    const remove = { result, status, data };
+    if (status === 200) {
+      server.log(['remove', 'success', 'info'], { type: data.type });
+    } else {
+      server.log(['remove', 'failed', 'error'], remove);
+      throw Boom.badRequest('Error removing from index', remove);
+    }
+    return remove;
   }
 };

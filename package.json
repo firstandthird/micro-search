@@ -14,9 +14,9 @@
   "author": "First+Third",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^4.11.0",
-    "eslint-config-firstandthird": "^4.0.1",
-    "eslint-plugin-import": "^2.6.1"
+    "eslint": "^4.18.2",
+    "eslint-config-firstandthird": "^4.3.0",
+    "eslint-plugin-import": "^2.9.0"
   },
   "eslintConfig": {
     "extends": "firstandthird",
@@ -25,15 +25,13 @@
     }
   },
   "dependencies": {
-    "async": "^2.6.0",
-    "boom": "^7.1.1",
+    "boom": "^7.2.0",
     "elasticsearch": "^14.0.0",
-    "hapi-api-key": "^2.0.0",
-    "hapi-auto-handler": "^1.5.1",
-    "hapi-pagedata": "^2.0.0",
-    "hapi-req": "0.5.0",
-    "joi": "^13.0.2",
-    "rapptor": "^3.6.0"
+    "hapi-api-key": "^3.0.0",
+    "hapi-pagedata": "^4.0.0",
+    "hapi-req": "^2.3.1",
+    "joi": "^13.1.2",
+    "rapptor": "^5.7.0"
   },
   "repository": {
     "type": "git",
