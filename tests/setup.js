@@ -4,15 +4,18 @@ const Rapptor = require('rapptor');
 
 // todo: in future this will be changed to just use async/await
 // everything else in the tests should be fine
-module.exports.setup = (options, dataSet) => new Promise((resolve, reject) => {
+module.exports.setup = (options, mapping) => new Promise((resolve, reject) => {
+  if (!options) {
+    options = {};
+  }
   const testenv = {
-    API_KEY: 'none',
-    ELASTICSEARCH_HOST: 'http://localhost:9200',
-    ELASTICSEARCH_INDEX: 'test' ,
+    API_KEY: 'test',
+    ELASTICSEARCH_HOST: 'elasticsearch:9200',
+    ELASTICSEARCH_INDEX: 'test_index' ,
     ELASTICSEARCH_TYPE: 'string' ,
-    PAGEDATA_HOST: 'localhost:9000',
+    PAGEDATA_HOST: 'http://localhost:8080', // just use local server for testing pagedata
     PAGEDATA_KEY: 'test' ,
-    PAGEDATA_SEARCH_OBJECT: '' ,
+    PAGEDATA_SEARCH_OBJECT: 'searchObject' ,
     PAGEDATA_STATUS: 'draft' ,
   };
 
@@ -29,8 +32,19 @@ module.exports.setup = (options, dataSet) => new Promise((resolve, reject) => {
     // save references to current rapptor/server for use in inject/shutdown:
     module.exports.rapptor = rapptor;
     module.exports.rapptor.server = rapptor.server;
-    const returnObj = { rapptor, server: rapptor.server };
-    return resolve(returnObj);
+
+    // clear out the test index before beginning:
+    rapptor.server.search.indices.delete({
+      index: '*',
+    }, (err2, res) => {
+      const returnObj = { rapptor, server: rapptor.server };
+      // add any mock mapping:
+      if (mapping) {
+        return rapptor.server.search.indices.putMapping(mapping, (mappingErr, mappingRes) => resolve(returnObj));
+      }
+      return resolve(returnObj);
+    });
+
   });
 });
 
