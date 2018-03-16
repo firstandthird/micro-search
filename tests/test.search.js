@@ -1,7 +1,7 @@
 const tap = require('tap');
 const setup = require('./setup.js');
-/*
-tap.test('can intitialize the server', async t => {
+
+tap.test('can initialize the server', async t => {
   const { rapptor, server } = await setup.setup({});
   t.ok(server.methods.flatten, 'loads flatten method');
   t.ok(server.methods.pagedata, 'loads pagedata methods');
@@ -233,6 +233,8 @@ tap.test('route.removeSingle', async t => {
   t.end();
 });
 
+// pagedata tests:
+
 tap.test('route.pagedata/hook`', async t => {
   const { rapptor, server } = await setup.setup({});
   server.route({
@@ -259,7 +261,7 @@ tap.test('route.pagedata/hook`', async t => {
   await setup.stop();
   t.end();
 });
-*/
+
 tap.test('route.pagedata/reindex`', async t => {
   const { rapptor, server } = await setup.setup({});
   server.route({
