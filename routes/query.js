@@ -12,37 +12,33 @@ exports.query = {
       }
     },
   },
-  handler: {
-    autoInject: {
-      query(server, settings, request, done) {
-        if (!server.search) {
-          return done(Boom.serverUnavailable('No connection to elasticsearch.'));
-        }
+  async handler(request, h) {
+    const server = request.server;
+    const settings = server.settings.app;
 
-        const data = Object.assign({}, {
-          index: settings.search.mainIndex,
-          ignoreUnavailable: true
-        }, request.payload);
-
-        server.log(['query', 'pending', 'info'], data);
-
-        server.search.search(data, (err, res, status) => {
-          done(err, { res, status, data });
-        });
-      },
-      reply(server, query, done) {
-        if (query.status === 200) {
-          server.log(['query', 'success', 'info'], { query: query.data });
-        } else {
-          server.log(['query', 'failed', 'error'], query);
-          return done(Boom.badRequest('Error executing query', query));
-        }
-
-        // Makes sure hits.hits exists
-        const res = Object.assign({}, { hits: { total: 0, hits: [] } }, query.res);
-
-        done(null, res.hits);
-      }
+    if (!server.search) {
+      throw Boom.serverUnavailable('No connection to elasticsearch.');
     }
+
+    const data = Object.assign({}, {
+      index: settings.search.mainIndex,
+      ignoreUnavailable: true
+    }, request.payload);
+
+    server.log(['query', 'pending', 'info'], data);
+
+    const { result, status } = await server.search.search(data);
+    const query = { result, status, data };
+    if (query.status === 200) {
+      server.log(['query', 'success', 'info'], { query: query.data });
+    } else {
+      server.log(['query', 'failed', 'error'], query);
+      throw Boom.badRequest('Error executing query', query);
+    }
+
+    // Makes sure hits.hits exists
+    const res = Object.assign({}, { hits: { total: 0, hits: [] } }, query.result);
+
+    return res.hits;
   }
 };

@@ -13,38 +13,27 @@ exports.reindex = {
       }
     },
   },
-  handler: {
-    autoInject: {
-      remove(server, request, done) {
-        async.each(request.payload.type, (type, cb) => {
-          server.req.post(`/remove?token=${request.query.token}`, {
-            payload: {
-              index: request.payload.index,
-              type
-            }
-          }, cb);
-        }, done);
-      },
-      pages(remove, server, request, done) {
-        server.methods.pagedata.projectSlug(request.payload.projectSlug, done);
-      },
-      index(pages, server, request, done) {
-        if (!Array.isArray(pages)) {
-          return done();
+  async handler(request, h) {
+    const server = request.server;
+    const removePromises = request.payload.type.map(type =>
+      server.req.post(`/remove?token=${request.query.token}`, {
+        payload: {
+          index: request.payload.index,
+          type
         }
-
-        async.each(pages, (page, cb) => {
-          server.req.post(`/pagedata/hook?token=${request.query.token}`, {
-            payload: {
-              slug: page.slug,
-              status: page.status || 'published'
-            }
-          }, cb);
-        }, done);
-      },
-      reply(server, index, done) {
-        done(null, index);
-      }
+      }));
+    await Promise.all(removePromises);
+    const pages = await server.methods.pagedata.projectSlug(request.payload.projectSlug);
+    if (!Array.isArray(pages)) {
+      return [];
     }
+    const hookPromises = pages.map(page => server.req.post(`/pagedata/hook?token=${request.query.token}`, {
+      payload: {
+        slug: page.slug,
+        status: page.status || 'published'
+      }
+    }));
+    const index = await Promise.all(hookPromises);
+    return index;
   }
 };

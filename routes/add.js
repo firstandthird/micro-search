@@ -14,33 +14,28 @@ exports.add = {
       }
     },
   },
-  handler: {
-    autoInject: {
-      index(server, settings, request, done) {
-        if (!server.search) {
-          return done(Boom.serverUnavailable('No connection to elasticsearch.'));
-        }
+  async handler(request, h) {
+    const server = request.server;
+    const settings = server.settings.app;
+    if (!server.search) {
+      throw Boom.serverUnavailable('No connection to elasticsearch.');
+    }
 
-        const data = Object.assign({}, {
-          index: settings.search.mainIndex,
-          type: settings.search.defaultType,
-          refresh: true
-        }, request.payload);
+    const data = Object.assign({}, {
+      index: settings.search.mainIndex,
+      type: settings.search.defaultType,
+      refresh: true
+    }, request.payload);
 
-        server.log(['add', 'pending', 'info'], data);
+    server.log(['add', 'pending', 'info'], data);
 
-        server.search.index(data, done);
-      },
-      reply(server, index, done) {
-        if (Array.isArray(index) && typeof index[0] === 'object' && index[1] === 201) {
-          server.log(['add', 'success', 'info'], { id: index[0]._id });
-        } else {
-          server.log(['add', 'failed', 'error'], index);
-          return done(Boom.badRequest('Error adding to index', index));
-        }
+    const index = await server.search.index(data);
 
-        done(null, index);
-      }
+    if (Array.isArray(index) && typeof index[0] === 'object' && index[1] === 201) {
+      server.log(['add', 'success', 'info'], { id: index[0]._id });
+    } else {
+      server.log(['add', 'failed', 'error'], index);
+      throw Boom.badRequest('Error adding to index', index);
     }
   }
 };
