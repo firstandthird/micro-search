@@ -130,13 +130,8 @@ tap.test('throws on invalid query', async t => {
       not: 'a thing you can do'
     }
   });
-  t.equal(response.statusCode, 400);
-  console.log('====');
-  console.log('====');
-  console.log('====');
-  console.log(response);
-  console.log(response.result);
-  // t.equal(response.message, 'child "body" fails because ["body" is required]');
+  t.equal(response.result.statusCode, 400);
+  t.equal(response.result.message, 'child "body" fails because ["body" is required]');
   await setup.stop();
   t.end();
 });
@@ -332,33 +327,6 @@ tap.test('route.pagedata/reindex`', async t => {
   });
   console.log('resutl');
   console.log(response.result);
-  await setup.stop();
-  t.end();
-});
-
-tap.test('route.complete', async t => {
-  const { rapptor, server } = await setup.setup({}, {
-    // mappings here
-  });
-  await server.inject({
-    method: 'post',
-    url: '/add?token=test',
-    payload: {
-      index: 'testindex',
-      type: 'string',
-      id: 'theId2',
-      body: {
-        title: 'Test1',
-        title_suggest: ['Test1', 'T'],
-        tags: ['y', 'z'],
-        published: true
-      },
-    }
-  });
-  const response = await server.inject({
-    method: 'get',
-    url: '/complete?token=test&index=testindex&field=title&q=title:Test1'
-  });
   await setup.stop();
   t.end();
 });
