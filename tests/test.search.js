@@ -1,6 +1,6 @@
 const tap = require('tap');
 const setup = require('./setup.js');
-
+/*
 tap.test('can intitialize the server', async t => {
   const { rapptor, server } = await setup.setup({});
   t.ok(server.methods.flatten, 'loads flatten method');
@@ -259,7 +259,7 @@ tap.test('route.pagedata/hook`', async t => {
   await setup.stop();
   t.end();
 });
-
+*/
 tap.test('route.pagedata/reindex`', async t => {
   const { rapptor, server } = await setup.setup({});
   server.route({
@@ -325,8 +325,33 @@ tap.test('route.pagedata/reindex`', async t => {
       type: 'string'
     }
   });
-  console.log('resutl');
-  console.log(response.result);
+  await setup.stop();
+  t.end();
+});
+
+tap.test('route.complete', async t => {
+  const { rapptor, server } = await setup.setup({}, {
+    // mappings here
+  });
+  await server.inject({
+    method: 'post',
+    url: '/add?token=test',
+    payload: {
+      index: 'testindex',
+      type: 'string',
+      id: 'theId2',
+      body: {
+        title: 'Test1',
+        title_suggest: ['Test1', 'T'],
+        tags: ['y', 'z'],
+        published: true
+      },
+    }
+  });
+  const response = await server.inject({
+    method: 'get',
+    url: '/complete?token=test&index=testindex&field=title&q=title:Test1'
+  });
   await setup.stop();
   t.end();
 });
