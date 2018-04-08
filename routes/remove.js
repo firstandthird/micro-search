@@ -30,11 +30,11 @@ exports.removeByType = {
           body = {
             query: {
               bool: {
-                filter: [
-                  {
+                filter: {
+                  match: {
                     contentType: request.payload.type
                   }
-                ]
+                }
               }
             }
           };
