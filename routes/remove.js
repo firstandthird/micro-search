@@ -8,7 +8,8 @@ exports.removeByType = {
     validate: {
       payload: {
         index: Joi.string().optional(),
-        type: Joi.string().optional()
+        type: Joi.string().optional(),
+        body: Joi.object().optional()
       }
     },
   },
@@ -19,16 +20,31 @@ exports.removeByType = {
           return done(Boom.serverUnavailable('No connection to elasticsearch.'));
         }
 
+        let body = {
+          query: {
+            match_all: {}
+          }
+        };
+
+        if (request.payload.type) {
+          body = {
+            query: {
+              bool: {
+                filter: [
+                  {
+                    contentType: request.payload.type
+                  }
+                ]
+              }
+            }
+          };
+        }
+
         const data = Object.assign({}, {
           index: settings.search.mainIndex,
-          type: settings.search.defaultType,
           conflicts: 'proceed',
           refresh: true,
-          body: {
-            query: {
-              match_all: {}
-            }
-          }
+          body
         }, request.payload);
 
         server.log(['remove', 'pending', 'info'], data);
@@ -39,7 +55,7 @@ exports.removeByType = {
       },
       reply(server, remove, done) {
         if (remove.status === 200) {
-          server.log(['remove', 'success', 'info'], { type: remove.data.type });
+          server.log(['remove', 'success', 'info'], { query: remove.data });
         } else {
           server.log(['remove', 'failed', 'error'], remove);
           return done(Boom.badRequest('Error removing from index', remove));

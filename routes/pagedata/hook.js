@@ -32,9 +32,10 @@ exports.pagedataHook = {
           delete content.type;
         }
 
+        content.contentType = searchObject.type;
+
         const data = {
           id: searchObject.id,
-          type: searchObject.type,
           body: content
         };
 

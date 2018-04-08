@@ -1,6 +1,6 @@
 {
   "name": "micro-search",
-  "version": "0.0.3",
+  "version": "1.0.0-pre",
   "description": "Middleman for handling elasticsearch indexing and queries",
   "engines": {
     "node": ">=8.8.0"

@@ -21,11 +21,16 @@ exports.add = {
           return done(Boom.serverUnavailable('No connection to elasticsearch.'));
         }
 
-        const data = Object.assign({}, {
+        let data = request.payload;
+
+        if (data.type && !data.body.contentType) {
+          data.body.contentType = data.type;
+        }
+
+        data = Object.assign({}, {
           index: settings.search.mainIndex,
-          type: settings.search.defaultType,
           refresh: true
-        }, request.payload);
+        }, data);
 
         server.log(['add', 'pending', 'info'], data);
 

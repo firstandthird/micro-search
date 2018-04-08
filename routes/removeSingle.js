@@ -8,7 +8,6 @@ exports.removeSingle = {
     validate: {
       payload: {
         index: Joi.string().optional(),
-        type: Joi.string().optional(),
         id: Joi.string().required()
       }
     },
@@ -22,7 +21,6 @@ exports.removeSingle = {
 
         const data = Object.assign({}, {
           index: settings.search.mainIndex,
-          type: settings.search.defaultType
         }, request.payload);
 
         server.log(['remove', 'pending', 'info'], data);

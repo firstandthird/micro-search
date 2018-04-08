@@ -5,13 +5,18 @@
   - `API_KEY` - Key to use for authenticating requests. All urls must have `?token=${API_KEY}`
   - `ELASTICSEARCH_HOST` - Hostname for your elasticsearch instance
   - `ELASTICSEARCH_INDEX` - Default index name
-  - `ELASTICSEARCH_TYPE` - default type
   - `PAGEDATA_HOST` - Host for pagedata instance. Default: `https://cdn.pagedata.co`
-  - `PAGEDATA_KEY` - Auth tokem for pagedata
+  - `PAGEDATA_KEY` - Auth token for pagedata
   - `PAGEDATA_SEARCH_OBJECT` - Object to use for some search meta. Object can contain: index, type, id. Defaults to root of document.
   - `PAGEDATA_STATUS` - Fires hook on updates with this status. Default: `draft`
   - `INDEX_ALL` - Set to true to index entire pagedata content. Note: This only indexes the values of properties. Property names will not be indexed. Default: `true`
   - `INDEX_ALL_KEY` - Name of the key to store the above all index on. Use this as a field name when performing queries. default: `allContent`
+
+#### Note on Types:
+
+New versions of elasticsearch no longer allow for custom types. To preserve a similar behavior, you can still pass in a type but this will be copied to the body object as body.contentType. The ideal way to handle multiple types is by using a different index for each type.
+
+When upgrading from older micro-search you'll need to re-index for the contentType field to be generated.
 
 ## Endpoints:
 
@@ -20,7 +25,7 @@
 Payload:
 
   - index (optional, name of index, defaults to `ENV.ELASTICSEARCH_INDEX`)
-  - type (optional, item type, defaults to `ENV.ELASTICSEARCH_TYPE`)
+  - type (optional, item type)
   - id (required, unique id/slug for item)
   - body (required, Object of key:value to index)
 
@@ -47,14 +52,14 @@ Note: This removes all items matching the payload.
 Payload:
 
   - index (optional, name of index, defaults to `ENV.ELASTICSEARCH_INDEX`)
-  - type (optional, item type, defaults to `ENV.ELASTICSEARCH_TYPE`)
+  - type (optional, item type)
 
 #### DELETE `/remove/single`
 
 Payload:
 
   - index (optional, name of index, defaults to `ENV.ELASTICSEARCH_INDEX`)
-  - type (optional, item type, defaults to `ENV.ELASTICSEARCH_TYPE`)
+  - type (optional, item type)
   - id (required, unique id/slug for item)
 
 #### POST `/pagedata/hook`
