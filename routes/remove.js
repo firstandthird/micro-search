@@ -40,6 +40,8 @@ exports.removeByType = {
           };
         }
 
+        delete request.payload.type;
+
         const data = Object.assign({}, {
           index: settings.search.mainIndex,
           conflicts: 'proceed',

@@ -25,6 +25,7 @@ exports.add = {
 
         if (data.type && !data.body.contentType) {
           data.body.contentType = data.type;
+          delete data.type;
         }
 
         data = Object.assign({}, {
