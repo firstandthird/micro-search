@@ -21,6 +21,7 @@ exports.removeSingle = {
 
         const data = Object.assign({}, {
           index: settings.search.mainIndex,
+          type: settings.search.defaultType
         }, request.payload);
 
         server.log(['remove', 'pending', 'info'], data);

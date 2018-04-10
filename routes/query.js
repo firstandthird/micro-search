@@ -21,6 +21,7 @@ exports.query = {
 
         const data = Object.assign({}, {
           index: settings.search.mainIndex,
+          type: settings.search.defaultType,
           ignoreUnavailable: true
         }, request.payload);
 

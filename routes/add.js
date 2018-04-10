@@ -30,6 +30,7 @@ exports.add = {
 
         data = Object.assign({}, {
           index: settings.search.mainIndex,
+          type: settings.search.defaultType,
           refresh: true
         }, data);
 
