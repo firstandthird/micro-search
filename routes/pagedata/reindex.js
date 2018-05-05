@@ -17,7 +17,7 @@ exports.reindex = {
     autoInject: {
       remove(server, request, done) {
         async.each(request.payload.type, (type, cb) => {
-          server.req.post(`/remove?token=${request.query.token}`, {
+          server.req.delete(`/remove?token=${request.query.token}`, {
             payload: {
               index: request.payload.index,
               type

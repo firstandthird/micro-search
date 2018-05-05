@@ -1,3 +1,4 @@
 node_modules/
 .env
 methods/postInit.js
+.nyc_output

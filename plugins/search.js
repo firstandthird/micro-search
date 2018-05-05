@@ -9,7 +9,6 @@ exports.register = function(server, options, next) {
       apiVersion: '6.0'
     });
   }
-
   server.decorate('server', 'search', client);
 
   if (typeof server.methods.postInit === 'function') {
